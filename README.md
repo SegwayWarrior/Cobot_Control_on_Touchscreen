@@ -2,9 +2,9 @@
 
 ## Problem Statement:
 For my final project, my goal was to design a drive system for a haptic device called the Touchbot, which is currently being developed by Professor Colgate and his
-team at Northwestern University.  Without getting into the details of his system, the Touchbot is designed to allow a user to get haptic feedback on a single finger
-while they are interacting with a touchscreen.  The drive system would act as a cariage for the Touchbot, as well as a cobot like device, letting the user push
-the device in one direction, while the cobot only changes the direction the wheel(s) are facing, aka the direction the user can move in.
+team at Northwestern University.  The Touchbot allows a user to recieve haptic feedback on a single finger
+while they are interacting with a touchscreen.  The drive system acts as a cariage for the Touchbot, as well as a cobot, letting the user push
+the device in the direction the wheel is facing.  This is useful for directing the user to a location on screen without requiring a second motor do drive the cobot on its own.
 
 ## Specifications
 The Touchbot drive system had some unique specifications to consider during development.  First of all, Professor Colgate wanted the cobot to be low cost and easy to create.  In addition, he wanted to minimize the height, which led to the O-ring wheels being embedded into the gear(s) that support them. Another specification was to allow the possiblity of using multiple Touchbots, ideally one for each of the user's fingers.  This meant limiting the overall width of the drive system to under 30mm.  While all of these challenges were reasonable, we found that including all of the required parts meant splitting our plans into two paths.  The first being a less restrictive design with the goal of actually making the drive system work with a touchpad.  The other being a more idealized solution that focuses on fitting everyhing into as small of a package as possible.
