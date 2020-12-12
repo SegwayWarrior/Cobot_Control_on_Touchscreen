@@ -1,4 +1,4 @@
-# Final_Project
+# Cobot Control on Touchscreen
 
 ## Introduction
 For my final project, my goal was to design a drive system for a haptic device called the Touchbot, which is currently being developed by Professor Colgate and his
