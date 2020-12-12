@@ -68,7 +68,7 @@ As is common with new ideas, some of the specifications changed while we were wr
 
 ![Synchro_drive](/images/synchro_drive.gif)
 
-While this is a great solution to minimize actuators, the Synchro drive does have the downside of not being able to control the orientation of its body to the surface it resides on.  With the conductive leaves, we are able to measure the body's orientation, but since it's not rotationally symmetric, it does cause the issue of not being able to fix the orientation.  The Synchro drive does otherwise seem to be an ideal solution to our problem, so moving forward we will try to make the cobot rotationally symmetric so the user will not notice the orientation offset.  This relates to our original problems of fitting all of the components into a small space. As this project continues, I suspect that Professor Colgate will continue with the Synchro drive, while slowly making things smaller and more symmetric.
+While this is a great solution to minimize actuators, the Synchro drive does have the downside of not being able to control the orientation of its body to the surface it resides on which is a problem since our cobot is not rotationally symmetric.  The Synchro drive does otherwise seem to be an ideal solution to our problem, so moving forward we will try to make the cobot rotationally symmetric so the user will not notice the orientation offset.  This relates to our original problems of fitting all of the components into a small space. As this project continues, I suspect that Professor Colgate will continue with the Synchro drive, while slowly making things smaller and more symmetric.
 
 ![Synchro_cad](/images/synchro_cad.png)
 
