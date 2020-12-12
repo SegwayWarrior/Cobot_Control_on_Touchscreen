@@ -1,6 +1,7 @@
 # Cobot Control on Touchscreen
 
 ## Introduction
+![main_pic](/images/main_pic2.jpg)
 For my final project, my goal was to design a drive system for a haptic device called the Touchbot, which is currently being developed by Professor Colgate and his
 team at Northwestern University.  The Touchbot allows a user to recieve haptic feedback on a single finger
 while they are interacting with a touchscreen.  The drive system acts as a cariage for the Touchbot, as well as a cobot, letting the user push
