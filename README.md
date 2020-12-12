@@ -20,17 +20,22 @@ While these challenges were reasonable, we found that including all of the requi
 
 ## Development Process
 ![cad_pic](/images/2_motor_cad.png)
+
 - We decided on a single wheel design for our cobot. It provided a natural feel, with a slight tilt perpendicular the wheel's orientation which helped with finding it.  
 - To tell the ESP32 the location of the Touchbot relative to the screen, we had a couple of options to go with.  The first being a combination of an encoder, to read the wheel's direction, and an imu, to read the location and orientation of the drive system.  While this option did have some promise, we decided to take advantage of the fact that the Touchbot was travelling on a touchscreen.  We did so by creating conductive PLA leaves that ride along the screen, providing the position and orientation of the drive system at all times.
 - Only one motor was required but since we wanted to put it next to the user's finger, we placed another one on it's opposite side simply to counterbalance the first one about the single wheel.  The second motor's shaft is not actually attached to anything.
 
 ## Programming
 ![running_underside](/images/running_underside.gif)
+
 The programming required for the drive system is split up into two sources, Arduino and Android Studio.  The Arduino code, bluetooth_simple10.ino, takes the position information from the Android app and is in charge of all of the controls.  As you can see below, the previous position is saved in order to calculate the trajectory of the cobot.  Then the rotational speed from the previous time step is taken into account in order to predict the future position.  Once we know this, we can find the tangent angle of the previous position to the circle using the law of cosines since we know the distance of all three sides.  Then we can compare this to the angle created from the circle's center, previous, and future position.  If the angle is greater than the tangent angle, then the trajectory is moving away from the circle.  If it's less, then it's moving into the circle.  
-![explain_code](/images/explain_code.jpg)
+
+![explain_code](/images/explain_code.png)
+
 Then, we check if the cobot is moving cw or ccw relative to the circle's center.  This is done by comparing the slopes of the lines created from the circle's center to the previous position, and the circle's center to the future position.  If slope_future is greater than slope_previous, then the cobot is moving cw and vice versa.  With these two pieces of information (into/out of circle and cw/ccw) we can determine whether the wheel should turn cw or ccw.  It is true that we can not tell if the cobot is slippin on the screen, but if this is the case all we can do is continue to turn the wheel until the user starts following the wheel's direction, which this program will do for us. 
 
 The responsibilities of the Android Studio app are much simpler.  It is in charge of showing a circle on screen, keeping track of multiple touch positions, and sending those positions to the Arduino over bluetooth.  Despite this, the actual code required many different components, especially making the bluetooth capabilities work.  As a newcomer to Android Studio and Java, this took about as much time to put together as the arduino code.
+
 ![running_topside](/images/running_topside.gif)
 
 ## Running Code
@@ -42,25 +47,32 @@ To start running the two together, turn on the ESP32 with the code installed and
 
 
 ## Cycloidal GearBox
-![cycloidal_drive](/images/cycloidal_drive.gif)
+![cycloidal_drive](/images/Cycloidal_drive.gif)
+
 After getting a design put together that worked with the touchpad, we decided to start working on a more ideal version where we could put a small motor directly underneath the user's finger, allowing us to make room for touchbots under multiple fingers. This created a challenge, because the typical gearbox required for this design was a planetary gearbox, which uses small gears that could not be easily produced.  Another option could have been a harmonic gearbox, but it had its own challenges with small gears and flexible components.  In the end, we decided to use a cycloidal drive as shown below.  This gives us similar benefits of a harmonic drive, but it doesn't require any flexible parts, and the outer gear requires only half the number of teeth of a harmonic drive with a similar gear ratio.  The one downside is that a small vibration is common with cycloidal gears because of their offset.  This can be balanced with another cycloidal gear which is oppositely offset, although I did not find the vibrations much different than normal motor usage.
+
 ![cycloid_display](/images/cycloid_display.gif)
+
 Even though this design showed promise, we did run into issues related to dealing with the axial loads.  Initially, this would cause the gearbox to completely stop running, but with the implementation of some thrust bearings, we were able to keep the gearbox running under load as shown below.  Unfortunately, the speed reduction from the axial loads were still a problem.  If this were to be our final solution, we would need to spend some time trying to mitigate the axial loads as much as possible.
+
 ![cycloid_running](/images/cycloid_running.gif)
 ![cycloid_cad1](/images/cycloid_cad1.png)
 
 
 ## Insights and Future Work
 While the program worked with a circle, it would be more difficult to make this work with other shapes.  We would either need to make maps of the screen, where each section has its own arc with its own center.  (Straight lines would have very large radii)  We would also need to fine tune how fast the wheel rotates based on it's distance from the arc's center. Another option we considered was putting conductive leaves directly on the center gear in order to read the direction of the wheel.  This may be possible, but it would increase the axial load on the cycloidal gearbox which, as stated above, is not ideal.  We could also simply use an encoder with the conductive leaves in order to use a more traditional control algorithm, but this may be a problem in the long run since minimizing space is a priority.
+
 ![cycloid_cad2](/images/cycloid_cad2.png)
 
 As is common with new ideas, some of the specifications changed while we were wrapping up the project.  Now we need the touchbot to have direct access to the touch screen underneath it, as well as being as close to the touchscreen as possible.  Unfortunately, this means that having a motor, gearbox, and single wheel directly underneath the touchbot will no longer be viable.  Fortunately, we did go through several iterations of designs, and one of them included a Synchro (like) drive, shown below.  The concept is simple, the rotation of all the wheels are controlled by one motor, with a common design being a larger, central gear that rotates with outer gears, each attached to a wheel.  Usually, this is done with three equally spaced wheels, but since we were trying to minimize the total width, we decided to use four wheels with two pairs being spaced as close together as possible.
+
 ![Synchro_drive](/images/synchro_drive.gif)
+
 While this is a great solution to minimize actuators, the Synchro drive does have the downside of not being able to control the orientation of its body to the surface it resides on.  With the conductive leaves, we are able to measure the body's orientation, but since it's not rotationally symmetric, it does cause the issue of not being able to fix the orientation.  The Synchro drive does otherwise seem to be an ideal solution to our problem, so moving forward we will try to make the cobot rotationally symmetric so the user will not notice the orientation offset.  This relates to our original problems of fitting all of the components into a small space. As this project continues, I suspect that Professor Colgate will continue with the Synchro drive, while slowly making things smaller and more symmetric.
+
 ![Synchro_cad](/images/synchro_cad.png)
 
 One thing that surprised me was how well the conductive PLA worked with the touchscreen.  It even allowed us to identify when the user did or didn't have their finger on the cobot.  In addition, we also tested some conductive O-rings, which were a bit tricky to get our hands on.  As you can see below, we did have some initial success with conductive wheels being recognized on my cell phone, but my touchpad was not as sensitive.  Even though we couldn't use these with our specific equipment, they did show promise.  Perhaps by using bigger wheels for a larger contact patch, they could work consistently enough to remove the conductive leaves all together.  
-![cond_wheels](/images/cond_wheels.gif)
 
 ## Special Thanks
 A big thanks to Professor Colgate for allowing me to work with him on this innovative idea.  Also, thank you to my advisors, Professor Matthew Elwin and Bill Strong for their consistent support and creative ideas during the entire process.
